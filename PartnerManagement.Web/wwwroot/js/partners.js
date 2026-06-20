@@ -75,6 +75,12 @@
     function buildPartnerRow(item) {
         var rowClass = getRowClass(item.id);
         var croatianPin = item.croatianPin ? escapeHtml(item.croatianPin) : '-';
+        var foreignBadge = item.isForeign
+            ? '<span class="status-badge status-badge--neutral">Strani</span>'
+            : '<span class="status-badge status-badge--soft">Domaći</span>';
+        var activeBadge = item.isActive
+            ? '<span class="status-badge status-badge--active">Aktivan</span>'
+            : '<span class="status-badge status-badge--inactive">Neaktivan</span>';
 
         return '' +
             '<tr class="partner-row ' + rowClass + '" data-partner-id="' + item.id + '" data-details-url="' + escapeHtml(item.detailsUrl) + '">' +
@@ -83,15 +89,17 @@
                 '<td>' + croatianPin + '</td>' +
                 '<td>' + escapeHtml(item.partnerType) + '</td>' +
                 '<td>' + escapeHtml(item.createdAtUtc) + '</td>' +
-                '<td>' + (item.isForeign ? 'Da' : 'Ne') + '</td>' +
-                '<td>' + (item.isActive ? 'Da' : 'Ne') + '</td>' +
+                '<td>' + foreignBadge + '</td>' +
+                '<td>' + activeBadge + '</td>' +
                 '<td>' + escapeHtml(item.gender) + '</td>' +
                 '<td class="partner-policy-count">' + escapeHtml(item.policyCount) + '</td>' +
                 '<td class="partner-total-amount">' + escapeHtml(item.totalPolicyAmount) + ' kn</td>' +
                 '<td class="text-right">' +
-                    '<a class="btn btn-outline-dark btn-sm" href="' + escapeHtml(item.editUrl) + '" title="Uredi partnera" aria-label="Uredi partnera"><span aria-hidden="true">&#9998;</span></a> ' +
-                    '<button type="button" class="btn btn-outline-primary btn-sm open-policy-modal" data-partner-id="' + item.id + '" data-partner-name="' + escapeHtml(item.fullName) + '">Unos police</button> ' +
-                    '<a class="btn btn-outline-secondary btn-sm" href="' + escapeHtml(item.policyFormUrl) + '">Forma police</a>' +
+                    '<div class="partner-actions">' +
+                        '<a class="btn btn-outline-dark btn-sm" href="' + escapeHtml(item.editUrl) + '" title="Uredi partnera" aria-label="Uredi partnera"><span aria-hidden="true">&#9998;</span></a>' +
+                        '<button type="button" class="btn btn-outline-primary btn-sm open-policy-modal" data-partner-id="' + item.id + '" data-partner-name="' + escapeHtml(item.fullName) + '">Unos police</button>' +
+                        '<a class="btn btn-outline-secondary btn-sm" href="' + escapeHtml(item.policyFormUrl) + '">Forma police</a>' +
+                    '</div>' +
                 '</td>' +
             '</tr>';
     }

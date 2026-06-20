@@ -3,12 +3,15 @@
     ViewData["Title"] = "Partneri";
 }
 
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+<div class="page-hero d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
     <div>
+        <div class="page-hero__eyebrow">Upravljanje partnerima</div>
         <h1 class="h3 mb-1">Partneri osiguravajućeg društva</h1>
-        <p class="text-muted mb-0">Pregled svih partnera, detalja i polica.</p>
+        <p class="text-muted mb-0">Pregled svih partnera, detalja i polica na jednom mjestu.</p>
     </div>
-    <a class="btn btn-primary mt-3 mt-md-0" asp-controller="Partners" asp-action="Create">Unos novog partnera</a>
+    <div class="page-hero__actions mt-3 mt-md-0">
+        <a class="btn btn-primary" asp-controller="Partners" asp-action="Create">Unos novog partnera</a>
+    </div>
 </div>
 
 @if (TempData["StatusMessage"] is string statusMessage)
@@ -66,8 +69,10 @@
                             </div>
                         </div>
                         <div class="form-group col-md-4 mb-2 text-md-right">
-                            <button type="submit" class="btn btn-primary">Primijeni filtere</button>
-                            <button type="button" class="btn btn-outline-secondary" id="partners-reset-filters">Reset</button>
+                            <div class="filter-actions">
+                                <button type="submit" class="btn btn-primary">Primijeni filtere</button>
+                                <button type="button" class="btn btn-outline-secondary" id="partners-reset-filters">Reset</button>
+                            </div>
                         </div>
                     </div>
                 </div>
