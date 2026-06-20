@@ -84,17 +84,17 @@
 
         return '' +
             '<tr class="partner-row ' + rowClass + '" data-partner-id="' + item.id + '" data-details-url="' + escapeHtml(item.detailsUrl) + '">' +
-                '<td class="partner-full-name">' + escapeHtml(item.fullName) + '</td>' +
-                '<td>' + escapeHtml(item.partnerNumber) + '</td>' +
-                '<td>' + croatianPin + '</td>' +
-                '<td>' + escapeHtml(item.partnerType) + '</td>' +
-                '<td>' + escapeHtml(item.createdAtUtc) + '</td>' +
-                '<td>' + foreignBadge + '</td>' +
-                '<td>' + activeBadge + '</td>' +
-                '<td>' + escapeHtml(item.gender) + '</td>' +
-                '<td class="partner-policy-count">' + escapeHtml(item.policyCount) + '</td>' +
-                '<td class="partner-total-amount">' + escapeHtml(item.totalPolicyAmount) + ' EUR</td>' +
-                '<td class="text-right partner-actions-column">' +
+                '<td class="partner-full-name" data-label="FullName">' + escapeHtml(item.fullName) + '</td>' +
+                '<td data-label="PartnerNumber">' + escapeHtml(item.partnerNumber) + '</td>' +
+                '<td data-label="CroatianPIN">' + croatianPin + '</td>' +
+                '<td data-label="PartnerType">' + escapeHtml(item.partnerType) + '</td>' +
+                '<td data-label="CreatedAtUtc">' + escapeHtml(item.createdAtUtc) + '</td>' +
+                '<td data-label="IsForeign">' + foreignBadge + '</td>' +
+                '<td data-label="Aktivan">' + activeBadge + '</td>' +
+                '<td data-label="Gender">' + escapeHtml(item.gender) + '</td>' +
+                '<td class="partner-policy-count" data-label="Police">' + escapeHtml(item.policyCount) + '</td>' +
+                '<td class="partner-total-amount" data-label="Iznos polica">' + escapeHtml(item.totalPolicyAmount) + ' EUR</td>' +
+                '<td class="text-right partner-actions-column" data-label="Akcije">' +
                     '<div class="partner-actions">' +
                         '<a class="btn btn-outline-dark btn-sm" href="' + escapeHtml(item.editUrl) + '" title="Uredi partnera" aria-label="Uredi partnera"><span aria-hidden="true">&#9998;</span></a>' +
                         '<button type="button" class="btn btn-outline-primary btn-sm open-policy-modal" data-partner-id="' + item.id + '" data-partner-name="' + escapeHtml(item.fullName) + '">Unos police</button>' +
