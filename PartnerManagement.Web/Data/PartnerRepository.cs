@@ -98,6 +98,7 @@ public sealed class PartnerRepository : IPartnerRepository
                 AND (@CreatedTo IS NULL OR CAST(ps.CreatedAtUtc AS date) <= @CreatedTo)
                 AND (@MinPolicyAmount IS NULL OR ps.TotalPolicyAmount >= @MinPolicyAmount)
                 AND (@MaxPolicyAmount IS NULL OR ps.TotalPolicyAmount <= @MaxPolicyAmount)
+                AND (@OnlyActive IS NULL OR ps.IsActive = @OnlyActive)
                 AND
                 (
                     @Search IS NULL
@@ -123,7 +124,8 @@ public sealed class PartnerRepository : IPartnerRepository
                 query.CreatedFrom,
                 query.CreatedTo,
                 query.MinPolicyAmount,
-                query.MaxPolicyAmount
+                query.MaxPolicyAmount,
+                query.OnlyActive
             },
             cancellationToken: cancellationToken))).AsList();
 

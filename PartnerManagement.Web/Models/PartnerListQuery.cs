@@ -11,4 +11,5 @@ public sealed class PartnerListQuery
     public DateTime? CreatedTo { get; set; }
     public decimal? MinPolicyAmount { get; set; }
     public decimal? MaxPolicyAmount { get; set; }
+    public bool? OnlyActive { get; set; }
 }

@@ -49,8 +49,18 @@
             createdFrom: toNullableText($('#partners-created-from').val()),
             createdTo: toNullableText($('#partners-created-to').val()),
             minPolicyAmount: toNullableNumber($('#partners-amount-min').val()),
-            maxPolicyAmount: toNullableNumber($('#partners-amount-max').val())
+            maxPolicyAmount: toNullableNumber($('#partners-amount-max').val()),
+            onlyActive: $('#partners-only-active').is(':checked') ? true : null
         };
+    }
+
+    function showInlineSuccess(message) {
+        var $alert = $('#partners-inline-success');
+        $alert.text(message).removeClass('d-none');
+
+        setTimeout(function () {
+            $alert.addClass('d-none').text('');
+        }, 2600);
     }
 
     function getRowClass(partnerId) {
@@ -584,6 +594,7 @@
                 updatePartnerRow(result);
                 $('#policyCreateModal').modal('hide');
                 refreshActiveDetails();
+                showInlineSuccess('Polica je uspješno spremljena.');
             }).fail(function (xhr) {
                 if (xhr.responseJSON && xhr.responseJSON.errors) {
                     showPolicyErrors(xhr.responseJSON.errors);

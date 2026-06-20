@@ -18,6 +18,7 @@
 
 <div class="card shadow-sm border-0 mb-4" id="partners-list-root" data-list-url="@Url.Action("List", "Partners")" data-highlight-id="@Model.HighlightPartnerId" data-policy-create-url="@Url.Action("Create", "Policies")" data-policy-edit-url-template="@Url.Action("Edit", "Policies", new { id = "__POLICY_ID__" })">
     <div class="card-body">
+        <div class="alert alert-success d-none" id="partners-inline-success" role="alert"></div>
         <form id="partners-filter-form" class="mb-0" novalidate>
             <div class="form-row align-items-end mb-2">
                 <div class="form-group col-lg-7 mb-2">
@@ -58,7 +59,13 @@
                             <label for="partners-amount-max" class="small font-weight-bold">Iznos police do</label>
                             <input type="number" class="form-control" id="partners-amount-max" step="0.01" min="0" />
                         </div>
-                        <div class="form-group col-md-6 mb-2 text-md-right">
+                        <div class="form-group col-md-2 mb-2">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" class="form-check-input" id="partners-only-active" />
+                                <label class="form-check-label" for="partners-only-active">Samo aktivni</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4 mb-2 text-md-right">
                             <button type="submit" class="btn btn-primary">Primijeni filtere</button>
                             <button type="button" class="btn btn-outline-secondary" id="partners-reset-filters">Reset</button>
                         </div>
