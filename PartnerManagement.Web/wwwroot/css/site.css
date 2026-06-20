@@ -186,6 +186,27 @@ body {
   box-shadow: 0 10px 22px rgba(31, 41, 55, 0.25);
 }
 
+.floating-back-to-top {
+  position: fixed;
+  right: 1rem;
+  bottom: 8.65rem;
+  z-index: 1040;
+  border: 1px solid rgba(31, 41, 55, 0.12);
+  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+  color: var(--brand-ink);
+  background: var(--brand-white);
+  box-shadow: 0 10px 22px rgba(31, 41, 55, 0.16);
+}
+
+.floating-back-to-top:hover,
+.floating-back-to-top:focus {
+  color: var(--brand-white);
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
 .partner-actions {
   display: flex;
   justify-content: flex-end;
@@ -312,6 +333,13 @@ body {
     left: 1rem;
     right: 1rem;
     bottom: 1rem;
+    text-align: center;
+  }
+
+  .floating-back-to-top {
+    left: 1rem;
+    right: 1rem;
+    bottom: 4.6rem;
     text-align: center;
   }
 

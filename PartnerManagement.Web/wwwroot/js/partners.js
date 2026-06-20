@@ -145,11 +145,13 @@
     function syncScrollActionsVisibility() {
         var $footer = $('#app-footer');
         var $floatingCta = $('#floating-policy-cta');
+        var $backToTop = $('#floating-back-to-top');
         var threshold = computeFirstPageThreshold();
         var shouldShow = Number.isFinite(threshold) && $(window).scrollTop() >= threshold;
 
         $footer.toggleClass('floating-active', shouldShow);
         $floatingCta.toggleClass('d-none', !shouldShow);
+        $backToTop.toggleClass('d-none', !shouldShow);
     }
 
     function buildPolicyEditUrl(policyId) {
@@ -507,6 +509,10 @@
 
         $('#floating-policy-cta').on('click', function () {
             openPolicyCreateModal(null, '', true);
+        });
+
+        $('#floating-back-to-top').on('click', function () {
+            $('html, body').animate({ scrollTop: 0 }, 220);
         });
 
         $('#partners-table').on('click', '.partner-row', function (event) {
