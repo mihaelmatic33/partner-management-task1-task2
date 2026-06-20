@@ -94,7 +94,7 @@
                 '<td>' + escapeHtml(item.gender) + '</td>' +
                 '<td class="partner-policy-count">' + escapeHtml(item.policyCount) + '</td>' +
                 '<td class="partner-total-amount">' + escapeHtml(item.totalPolicyAmount) + ' kn</td>' +
-                '<td class="text-right">' +
+                '<td class="text-right partner-actions-column">' +
                     '<div class="partner-actions">' +
                         '<a class="btn btn-outline-dark btn-sm" href="' + escapeHtml(item.editUrl) + '" title="Uredi partnera" aria-label="Uredi partnera"><span aria-hidden="true">&#9998;</span></a>' +
                         '<button type="button" class="btn btn-outline-primary btn-sm open-policy-modal" data-partner-id="' + item.id + '" data-partner-name="' + escapeHtml(item.fullName) + '">Unos police</button>' +

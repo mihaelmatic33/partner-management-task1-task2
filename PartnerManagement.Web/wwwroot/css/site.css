@@ -187,10 +187,21 @@ body {
 }
 
 .partner-actions {
-  display: inline-flex;
+  display: flex;
   justify-content: flex-end;
   gap: 0.45rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.partner-actions-column {
+  min-width: 240px;
+  white-space: nowrap;
+}
+
+.partner-actions .btn {
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .status-badge {
@@ -309,7 +320,13 @@ body {
   }
 
   .partner-actions {
-    min-width: 210px;
+    min-width: 0;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .partner-actions-column {
+    min-width: 220px;
   }
 }
 
