@@ -93,7 +93,7 @@
                 '<td>' + activeBadge + '</td>' +
                 '<td>' + escapeHtml(item.gender) + '</td>' +
                 '<td class="partner-policy-count">' + escapeHtml(item.policyCount) + '</td>' +
-                '<td class="partner-total-amount">' + escapeHtml(item.totalPolicyAmount) + ' kn</td>' +
+                '<td class="partner-total-amount">' + escapeHtml(item.totalPolicyAmount) + ' EUR</td>' +
                 '<td class="text-right partner-actions-column">' +
                     '<div class="partner-actions">' +
                         '<a class="btn btn-outline-dark btn-sm" href="' + escapeHtml(item.editUrl) + '" title="Uredi partnera" aria-label="Uredi partnera"><span aria-hidden="true">&#9998;</span></a>' +
@@ -322,7 +322,7 @@
             ? '<p class="mb-0 text-muted">Partner nema evidentiranih polica.</p>'
             : '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Broj police</th><th>Iznos</th><th>Kreirano</th><th class="text-right">Akcija</th></tr></thead><tbody>' +
                 data.policies.map(function (policy) {
-                    return '<tr><td>' + escapeHtml(policy.policyNumber) + '</td><td>' + escapeHtml(policy.policyAmount) + ' kn</td><td>' + escapeHtml(policy.createdAtUtc) + '</td><td class="text-right"><button type="button" class="btn btn-sm btn-outline-primary edit-policy-inline" data-policy-id="' + policy.id + '" data-policy-number="' + escapeHtml(policy.policyNumber) + '" data-policy-amount="' + escapeHtml(policy.policyAmount) + '">Izmijeni</button></td></tr>';
+                    return '<tr><td>' + escapeHtml(policy.policyNumber) + '</td><td>' + escapeHtml(policy.policyAmount) + ' EUR</td><td>' + escapeHtml(policy.createdAtUtc) + '</td><td class="text-right"><button type="button" class="btn btn-sm btn-outline-primary edit-policy-inline" data-policy-id="' + policy.id + '" data-policy-number="' + escapeHtml(policy.policyNumber) + '" data-policy-amount="' + escapeHtml(policy.policyAmount) + '">Izmijeni</button></td></tr>';
                 }).join('') +
               '</tbody></table></div>';
 
@@ -465,7 +465,7 @@
 
         row.find('.partner-full-name').text(result.fullName);
         row.find('.partner-policy-count').text(result.policyCount);
-        row.find('.partner-total-amount').text(result.totalPolicyAmount + ' kn');
+        row.find('.partner-total-amount').text(result.totalPolicyAmount + ' EUR');
         row.addClass('table-warning font-weight-bold highlighted-row');
     }
 
