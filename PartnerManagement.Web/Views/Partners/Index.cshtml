@@ -131,7 +131,13 @@
                     <input type="hidden" id="policy-id" name="PolicyId" />
                     <input type="hidden" id="policy-partner-id" name="PartnerId" />
                     <div class="alert alert-danger d-none" id="policy-form-errors"></div>
-                    <div class="form-group">
+                    <div class="form-group d-none" id="policy-partner-picker-group">
+                        <label for="policy-partner-search" class="font-weight-bold">Odaberi partnera (po imenu)</label>
+                        <input type="text" class="form-control" id="policy-partner-search" placeholder="Upiši ime partnera" autocomplete="off" />
+                        <select class="form-control mt-2" id="policy-partner-select" size="6"></select>
+                        <span class="text-danger small d-block" id="policy-partner-error"></span>
+                    </div>
+                    <div class="form-group" id="policy-partner-static-group">
                         <label class="font-weight-bold">Partner</label>
                         <input type="text" class="form-control" id="policy-partner-name" readonly />
                     </div>

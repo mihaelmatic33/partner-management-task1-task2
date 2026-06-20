@@ -13,7 +13,8 @@
         activeDetailsUrl: null,
         lastPartnerId: null,
         lastPartnerName: '',
-        isPolicySubmitting: false
+        isPolicySubmitting: false,
+        policyPartnerLookupNonce: 0
     };
 
     function escapeHtml(value) {
@@ -137,11 +138,21 @@
         return state.policyEditUrlTemplate.replace('__POLICY_ID__', policyId);
     }
 
-    function openPolicyCreateModal(partnerId, partnerName) {
+    function openPolicyCreateModal(partnerId, partnerName, usePartnerPicker) {
+        var partnerPickerMode = !!usePartnerPicker;
         clearPolicyErrors();
+        $('#policy-partner-picker-group').toggleClass('d-none', !partnerPickerMode);
+        $('#policy-partner-static-group').toggleClass('d-none', partnerPickerMode);
         $('#policy-id').val('');
-        $('#policy-partner-id').val(partnerId);
-        $('#policy-partner-name').val(partnerName);
+        $('#policy-partner-id').val(partnerPickerMode ? '' : partnerId);
+        $('#policy-partner-name').val(partnerPickerMode ? '' : partnerName);
+
+        if (partnerPickerMode) {
+            $('#policy-partner-search').val('');
+            $('#policy-partner-select').empty();
+            loadPartnerOptions('');
+        }
+
         $('#policy-number').val('');
         $('#policy-amount').val('');
         $('#policy-form').attr('action', state.policyCreateUrl);
@@ -317,8 +328,10 @@
 
     function clearPolicyErrors() {
         $('#policy-form-errors').addClass('d-none').empty();
+        $('#policy-partner-error').text('');
         $('#policy-number-error').text('');
         $('#policy-amount-error').text('');
+        $('#policy-partner-select').removeClass('is-invalid');
         $('#policy-number').removeClass('is-invalid');
         $('#policy-amount').removeClass('is-invalid');
     }
@@ -342,6 +355,10 @@
             errors[key].forEach(function (message) {
                 var effectiveMessage = isRequiredLikeMessage(message) ? 'Ovo polje je obavezno.' : message;
 
+                if (key === 'PartnerId' || key === 'PolicyForm.PartnerId') {
+                    setFieldError('#policy-partner-select', '#policy-partner-error', effectiveMessage);
+                }
+
                 if (key === 'PolicyNumber' || key === 'PolicyForm.PolicyNumber') {
                     setFieldError('#policy-number', '#policy-number-error', effectiveMessage);
                 }
@@ -358,8 +375,14 @@
 
     function validatePolicyFormBeforeSubmit() {
         var isValid = true;
+        var partnerId = String($('#policy-partner-id').val() || '').trim();
         var policyNumber = String($('#policy-number').val() || '').trim();
         var policyAmount = String($('#policy-amount').val() || '').trim();
+
+        if (partnerId.length === 0) {
+            setFieldError('#policy-partner-select', '#policy-partner-error', 'Ovo polje je obavezno.');
+            isValid = false;
+        }
 
         if (policyNumber.length === 0) {
             setFieldError('#policy-number', '#policy-number-error', 'Ovo polje je obavezno.');
@@ -372,6 +395,48 @@
         }
 
         return isValid;
+    }
+
+    function renderPartnerOptions(items) {
+        var optionsMarkup = items.map(function (item, index) {
+            var selected = index === 0 ? ' selected' : '';
+            return '<option value="' + item.id + '"' + selected + '>' + escapeHtml(item.fullName) + '</option>';
+        }).join('');
+
+        $('#policy-partner-select').html(optionsMarkup);
+
+        if (items.length === 0) {
+            $('#policy-partner-id').val('');
+            return;
+        }
+
+        $('#policy-partner-id').val(items[0].id);
+        $('#policy-partner-name').val(items[0].fullName);
+    }
+
+    function loadPartnerOptions(searchText) {
+        var nonce = ++state.policyPartnerLookupNonce;
+
+        $.get(state.listUrl, {
+            offset: 0,
+            limit: 25,
+            search: toNullableText(searchText)
+        }).done(function (result) {
+            if (nonce !== state.policyPartnerLookupNonce) {
+                return;
+            }
+
+            renderPartnerOptions(result.items || []);
+        }).fail(function () {
+            if (nonce !== state.policyPartnerLookupNonce) {
+                return;
+            }
+
+            $('#policy-partner-select').empty();
+            $('#policy-partner-id').val('');
+            $('#policy-partner-error').text('Partnere trenutno nije moguće učitati.');
+            $('#policy-partner-select').addClass('is-invalid');
+        });
     }
 
     function updatePartnerRow(result) {
@@ -423,23 +488,7 @@
         syncScrollActionsVisibility();
 
         $('#floating-policy-cta').on('click', function () {
-            if (state.lastPartnerId !== null) {
-                openPolicyCreateModal(state.lastPartnerId, state.lastPartnerName);
-                return;
-            }
-
-            var $firstRow = $('#partners-table tbody .partner-row').first();
-            if ($firstRow.length === 0) {
-                return;
-            }
-
-            var partnerId = Number($firstRow.data('partner-id'));
-            var partnerName = $firstRow.find('.partner-full-name').text();
-            if (Number.isFinite(partnerId)) {
-                state.lastPartnerId = partnerId;
-                state.lastPartnerName = partnerName;
-                openPolicyCreateModal(partnerId, partnerName);
-            }
+            openPolicyCreateModal(null, '', true);
         });
 
         $('#partners-table').on('click', '.partner-row', function (event) {
@@ -456,7 +505,7 @@
             var partnerName = $(this).data('partner-name');
             state.lastPartnerId = partnerId;
             state.lastPartnerName = partnerName;
-            openPolicyCreateModal(partnerId, partnerName);
+            openPolicyCreateModal(partnerId, partnerName, false);
         });
 
         $('#partner-details-content').on('click', '.open-policy-from-details', function () {
@@ -464,7 +513,27 @@
             var partnerName = $(this).data('partner-name');
             state.lastPartnerId = partnerId;
             state.lastPartnerName = partnerName;
-            openPolicyCreateModal(partnerId, partnerName);
+            openPolicyCreateModal(partnerId, partnerName, false);
+        });
+
+        $('#policy-partner-search').on('input', debounce(function () {
+            loadPartnerOptions($('#policy-partner-search').val());
+        }, 250));
+
+        $('#policy-partner-select').on('change', function () {
+            var selectedOption = $(this).find('option:selected');
+            var partnerId = selectedOption.val();
+            var partnerName = selectedOption.text();
+
+            $('#policy-partner-id').val(partnerId || '');
+            $('#policy-partner-name').val(partnerName || '');
+            $('#policy-partner-error').text('');
+            $('#policy-partner-select').removeClass('is-invalid');
+        });
+
+        $('#policyCreateModal').on('hidden.bs.modal', function () {
+            $('#policy-partner-picker-group').addClass('d-none');
+            $('#policy-partner-static-group').removeClass('d-none');
         });
 
         $('#partner-details-content').on('click', '.edit-policy-inline', function () {
