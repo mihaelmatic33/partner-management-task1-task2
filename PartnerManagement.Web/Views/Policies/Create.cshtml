@@ -1,0 +1,40 @@
+@model PartnerManagement.Web.Models.PolicyFormModel
+@{
+    ViewData["Title"] = "Unos police";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h1 class="h3 mb-1">Unos police partnera</h1>
+                <p class="text-muted mb-0">Unesi broj police i iznos police.</p>
+            </div>
+            <a class="btn btn-outline-secondary" asp-controller="Partners" asp-action="Index">Natrag na listu</a>
+        </div>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <input asp-for="PartnerId" type="hidden" />
+                    <div class="form-group">
+                        <label asp-for="PolicyNumber">Broj police</label>
+                        <input asp-for="PolicyNumber" class="form-control" />
+                        <span asp-validation-for="PolicyNumber" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PolicyAmount">Iznos police</label>
+                        <input asp-for="PolicyAmount" class="form-control" step="0.01" min="0.01" />
+                        <span asp-validation-for="PolicyAmount" class="text-danger small"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Spremi policu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

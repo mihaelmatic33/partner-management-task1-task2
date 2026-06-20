@@ -1,0 +1,121 @@
+@model PartnerManagement.Web.Models.PartnerListViewModel
+@{
+    ViewData["Title"] = "Partneri";
+}
+
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+    <div>
+        <h1 class="h3 mb-1">Partneri osiguravajućeg društva</h1>
+        <p class="text-muted mb-0">Pregled svih partnera, detalja i polica.</p>
+    </div>
+    <a class="btn btn-primary mt-3 mt-md-0" asp-controller="Partners" asp-action="Create">Unos novog partnera</a>
+</div>
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-success" role="alert">@statusMessage</div>
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0" id="partners-table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>FullName</th>
+                        <th>PartnerNumber</th>
+                        <th>CroatianPIN</th>
+                        <th>PartnerType</th>
+                        <th>CreatedAtUtc</th>
+                        <th>IsForeign</th>
+                        <th>Gender</th>
+                        <th>Police</th>
+                        <th>Iznos polica</th>
+                        <th class="text-right">Akcije</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var partner in Model.Partners)
+                {
+                    var rowClass = partner.Id == Model.HighlightPartnerId ? "table-warning font-weight-bold highlighted-row" : string.Empty;
+                    <tr class="partner-row @rowClass"
+                        data-partner-id="@partner.Id"
+                        data-details-url="@Url.Action("Details", "Partners", new { id = partner.Id })">
+                        <td class="partner-full-name">@partner.FullName</td>
+                        <td>@partner.PartnerNumber</td>
+                        <td>@(string.IsNullOrWhiteSpace(partner.CroatianPin) ? "-" : partner.CroatianPin)</td>
+                        <td>@((PartnerType)partner.PartnerTypeId)</td>
+                        <td>@partner.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@(partner.IsForeign ? "Da" : "Ne")</td>
+                        <td>@partner.Gender</td>
+                        <td class="partner-policy-count">@partner.PolicyCount</td>
+                        <td class="partner-total-amount">@partner.TotalPolicyAmount.ToString("0.00") kn</td>
+                        <td class="text-right">
+                            <button type="button"
+                                    class="btn btn-outline-primary btn-sm open-policy-modal"
+                                    data-partner-id="@partner.Id"
+                                    data-partner-name="@partner.FullName">
+                                Unos police
+                            </button>
+                            <a class="btn btn-outline-secondary btn-sm" asp-controller="Policies" asp-action="Create" asp-route-partnerId="@partner.Id">Forma police</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="partnerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="partnerDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="partnerDetailsModalLabel">Detalji partnera</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="partner-details-content">
+                <div class="text-center py-4 text-muted">Učitavanje...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="policyCreateModal" tabindex="-1" role="dialog" aria-labelledby="policyCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="policyCreateModalLabel">Unos police</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="policy-form" asp-controller="Policies" asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="PolicyForm.PartnerId" type="hidden" id="policy-partner-id" />
+                    <div class="alert alert-danger d-none" id="policy-form-errors"></div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Partner</label>
+                        <input type="text" class="form-control" id="policy-partner-name" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PolicyForm.PolicyNumber">Broj police</label>
+                        <input asp-for="PolicyForm.PolicyNumber" class="form-control" id="policy-number" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PolicyForm.PolicyAmount">Iznos police</label>
+                        <input asp-for="PolicyForm.PolicyAmount" class="form-control" id="policy-amount" step="0.01" min="0.01" />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Spremi policu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/partners.js" asp-append-version="true"></script>
+}

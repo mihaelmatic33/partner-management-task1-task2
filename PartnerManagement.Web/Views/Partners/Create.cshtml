@@ -1,0 +1,96 @@
+@model PartnerManagement.Web.Models.PartnerFormModel
+@{
+    ViewData["Title"] = "Novi partner";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h1 class="h3 mb-1">Unos novog partnera</h1>
+                <p class="text-muted mb-0">Forma validira podatke prije sigurnog spremanja u bazu.</p>
+            </div>
+            <a class="btn btn-outline-secondary" asp-controller="Partners" asp-action="Index">Natrag na listu</a>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="FirstName">FirstName</label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="LastName">LastName</label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Address">Address</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger small"></span>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="PartnerNumber">PartnerNumber</label>
+                            <input asp-for="PartnerNumber" class="form-control" maxlength="20" inputmode="numeric" />
+                            <span asp-validation-for="PartnerNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="CroatianPin">CroatianPIN</label>
+                            <input asp-for="CroatianPin" class="form-control" maxlength="11" inputmode="numeric" />
+                            <span asp-validation-for="CroatianPin" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="PartnerTypeId">PartnerTypeId</label>
+                            <select asp-for="PartnerTypeId" class="form-control">
+                                <option value="">Odaberi tip</option>
+                                <option value="1">Personal</option>
+                                <option value="2">Legal</option>
+                            </select>
+                            <span asp-validation-for="PartnerTypeId" class="text-danger small"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="Gender">Gender</label>
+                            <select asp-for="Gender" class="form-control">
+                                <option value="">Odaberi spol</option>
+                                <option value="M">M</option>
+                                <option value="F">F</option>
+                                <option value="N">N</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label asp-for="CreatedByUser">CreatedByUser</label>
+                            <input asp-for="CreatedByUser" class="form-control" type="email" maxlength="255" />
+                            <span asp-validation-for="CreatedByUser" class="text-danger small"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label asp-for="ExternalCode">ExternalCode</label>
+                            <input asp-for="ExternalCode" class="form-control" maxlength="20" />
+                            <span asp-validation-for="ExternalCode" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="form-group form-check">
+                        <input asp-for="IsForeign" class="form-check-input" />
+                        <label asp-for="IsForeign" class="form-check-label">IsForeign</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Spremi partnera</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
