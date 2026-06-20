@@ -123,6 +123,18 @@ body {
   white-space: nowrap;
 }
 
+.table-scroll-x {
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 14px;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.08);
+  background: rgba(31, 41, 55, 0.03);
+}
+
+.table-scroll-x__inner {
+  height: 1px;
+}
+
 .partner-row {
   cursor: pointer;
 }
@@ -324,6 +336,10 @@ body {
   .table-responsive {
     border-radius: 0.9rem;
     overflow-x: hidden;
+  }
+
+  .table-scroll-x {
+    display: none !important;
   }
 
   #partners-table {

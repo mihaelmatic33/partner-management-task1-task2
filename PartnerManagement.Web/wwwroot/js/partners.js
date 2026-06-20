@@ -14,7 +14,8 @@
         lastPartnerId: null,
         lastPartnerName: '',
         isPolicySubmitting: false,
-        policyPartnerLookupNonce: 0
+        policyPartnerLookupNonce: 0,
+        isHorizontalScrollBound: false
     };
 
     function escapeHtml(value) {
@@ -154,6 +155,41 @@
         $backToTop.toggleClass('d-none', !shouldShow);
     }
 
+    function syncHorizontalScrollTrack() {
+        var $tableWrap = $('#partners-table').closest('.table-responsive');
+        var $track = $('#partners-table-scroll-x');
+        var $trackInner = $('#partners-table-scroll-x-inner');
+
+        if ($tableWrap.length === 0 || $track.length === 0) {
+            return;
+        }
+
+        var wrapElement = $tableWrap.get(0);
+        var needsHorizontalScroll = wrapElement.scrollWidth > wrapElement.clientWidth + 1;
+
+        if (!needsHorizontalScroll) {
+            $track.addClass('d-none');
+            return;
+        }
+
+        $trackInner.width(wrapElement.scrollWidth);
+        $track.removeClass('d-none');
+
+        if (!state.isHorizontalScrollBound) {
+            state.isHorizontalScrollBound = true;
+
+            $track.on('scroll', function () {
+                wrapElement.scrollLeft = $track.get(0).scrollLeft;
+            });
+
+            $tableWrap.on('scroll', function () {
+                $track.get(0).scrollLeft = wrapElement.scrollLeft;
+            });
+        }
+
+        $track.get(0).scrollLeft = wrapElement.scrollLeft;
+    }
+
     function buildPolicyEditUrl(policyId) {
         return state.policyEditUrlTemplate.replace('__POLICY_ID__', policyId);
     }
@@ -270,6 +306,7 @@
                 state.isLoading = false;
                 setLoading(false);
                 ensureViewportFilled();
+                syncHorizontalScrollTrack();
                 syncScrollActionsVisibility();
             });
     }
@@ -503,8 +540,10 @@
 
         $(window).on('scroll', maybeLoadByScroll);
         $(window).on('scroll resize', syncScrollActionsVisibility);
+        $(window).on('resize', syncHorizontalScrollTrack);
 
         resetAndReload();
+        syncHorizontalScrollTrack();
         syncScrollActionsVisibility();
 
         $('#floating-policy-cta').on('click', function () {
