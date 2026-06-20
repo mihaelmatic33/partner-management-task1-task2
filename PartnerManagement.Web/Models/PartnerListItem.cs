@@ -10,6 +10,7 @@ public sealed class PartnerListItem
     public DateTime CreatedAtUtc { get; init; }
     public bool IsForeign { get; init; }
     public string Gender { get; init; } = string.Empty;
+    public bool IsActive { get; init; }
     public int PolicyCount { get; init; }
     public decimal TotalPolicyAmount { get; init; }
     public bool IsPriority { get; init; }

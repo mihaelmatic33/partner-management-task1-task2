@@ -1,22 +1,27 @@
 @model PartnerManagement.Web.Models.PolicyFormModel
 @{
-    ViewData["Title"] = "Unos police";
+    var formAction = (ViewData["FormAction"] as string) ?? "Create";
+    var pageTitle = (ViewData["PageTitle"] as string) ?? "Unos police partnera";
+    var description = (ViewData["Description"] as string) ?? "Unesi broj police i iznos police.";
+    var submitLabel = (ViewData["SubmitLabel"] as string) ?? "Spremi policu";
+    ViewData["Title"] = pageTitle;
 }
 
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
-                <h1 class="h3 mb-1">Unos police partnera</h1>
-                <p class="text-muted mb-0">Unesi broj police i iznos police.</p>
+                <h1 class="h3 mb-1">@pageTitle</h1>
+                <p class="text-muted mb-0">@description</p>
             </div>
             <a class="btn btn-outline-secondary" asp-controller="Partners" asp-action="Index">Natrag na listu</a>
         </div>
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
-                <form asp-action="Create" method="post" novalidate>
+                <form asp-action="@formAction" asp-route-id="@Model.PolicyId" method="post" novalidate class="js-prevent-double-submit">
                     @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <input asp-for="PolicyId" type="hidden" />
                     <input asp-for="PartnerId" type="hidden" />
                     <div class="form-group">
                         <label asp-for="PolicyNumber">Broj police</label>
@@ -28,7 +33,7 @@
                         <input asp-for="PolicyAmount" class="form-control" step="0.01" min="0.01" />
                         <span asp-validation-for="PolicyAmount" class="text-danger small"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Spremi policu</button>
+                    <button type="submit" class="btn btn-primary btn-block">@submitLabel</button>
                 </form>
             </div>
         </div>

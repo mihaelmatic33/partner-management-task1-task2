@@ -1,22 +1,27 @@
 @model PartnerManagement.Web.Models.PartnerFormModel
 @{
-    ViewData["Title"] = "Novi partner";
+    var formAction = (ViewData["FormAction"] as string) ?? "Create";
+    var pageTitle = (ViewData["PageTitle"] as string) ?? "Unos novog partnera";
+    var description = (ViewData["Description"] as string) ?? "Forma validira podatke prije sigurnog spremanja u bazu.";
+    var submitLabel = (ViewData["SubmitLabel"] as string) ?? "Spremi partnera";
+    ViewData["Title"] = pageTitle;
 }
 
 <div class="row justify-content-center">
     <div class="col-lg-8 col-xl-7">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
-                <h1 class="h3 mb-1">Unos novog partnera</h1>
-                <p class="text-muted mb-0">Forma validira podatke prije sigurnog spremanja u bazu.</p>
+                <h1 class="h3 mb-1">@pageTitle</h1>
+                <p class="text-muted mb-0">@description</p>
             </div>
             <a class="btn btn-outline-secondary" asp-controller="Partners" asp-action="Index">Natrag na listu</a>
         </div>
 
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
-                <form asp-action="Create" method="post" novalidate>
+                <form asp-action="@formAction" asp-route-id="@Model.PartnerId" method="post" novalidate class="js-prevent-double-submit">
                     @Html.AntiForgeryToken()
+                    <input asp-for="PartnerId" type="hidden" />
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -84,7 +89,11 @@
                         <input asp-for="IsForeign" class="form-check-input" />
                         <label asp-for="IsForeign" class="form-check-label">IsForeign</label>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg btn-block">Spremi partnera</button>
+                    <div class="form-group form-check">
+                        <input asp-for="IsActive" class="form-check-input" />
+                        <label asp-for="IsActive" class="form-check-label">Aktivan</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">@submitLabel</button>
                 </form>
             </div>
         </div>

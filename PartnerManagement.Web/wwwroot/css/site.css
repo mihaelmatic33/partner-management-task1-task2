@@ -1,3 +1,10 @@
+:root {
+  --brand-red: #ed1c24;
+  --brand-white: #ffffff;
+  --brand-ink: #1f2937;
+  --brand-surface: #f6f7fb;
+}
+
 html {
   font-size: 14px;
 }
@@ -9,7 +16,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem var(--brand-white), 0 0 0 0.25rem rgba(237, 28, 36, 0.25);
 }
 
 html {
@@ -19,21 +26,72 @@ html {
 
 body {
   margin-bottom: 60px;
-  background: #f5f7fb;
-  color: #1f2937;
+  padding-bottom: 82px;
+  background: linear-gradient(180deg, var(--brand-white) 0%, var(--brand-surface) 55%, var(--brand-white) 100%);
+  color: var(--brand-ink);
 }
 
 .navbar-brand {
   letter-spacing: 0.03em;
 }
 
+.site-header .navbar {
+  background: var(--brand-red);
+}
+
+.site-header .nav-link,
+.site-header .navbar-brand {
+  color: var(--brand-white) !important;
+}
+
+.site-header .nav-link {
+  opacity: 0.92;
+}
+
+.site-header .nav-link:hover {
+  opacity: 1;
+}
+
+.btn-primary {
+  background-color: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--brand-red);
+  border-color: var(--brand-red);
+  filter: brightness(0.93);
+}
+
+.btn-outline-primary {
+  color: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  color: var(--brand-white);
+  background-color: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
 .card {
   border-radius: 0.9rem;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+  box-shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
 }
 
 .table td,
 .table th {
   vertical-align: middle;
+}
+
+.table thead th {
+  border-top: 0;
+  background: rgba(31, 41, 55, 0.06);
 }
 
 .partner-row {
@@ -48,6 +106,46 @@ body {
   padding: 1rem 0;
 }
 
+#app-footer {
+  transition: transform 0.24s ease, opacity 0.24s ease, background-color 0.24s ease, color 0.24s ease;
+}
+
+#app-footer.floating-active {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1035;
+  color: var(--brand-white) !important;
+  background: var(--brand-red) !important;
+  border-top: 0 !important;
+  box-shadow: 0 -8px 20px rgba(31, 41, 55, 0.2);
+}
+
+#app-footer.floating-active a,
+#app-footer.floating-active .container {
+  color: var(--brand-white) !important;
+}
+
+.filter-panel {
+  background: var(--brand-surface);
+  border: 1px solid rgba(31, 41, 55, 0.1);
+}
+
+.floating-policy-cta {
+  position: fixed;
+  right: 1rem;
+  bottom: 5rem;
+  z-index: 1040;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  font-weight: 600;
+  color: var(--brand-white);
+  background: var(--brand-red);
+  box-shadow: 0 10px 22px rgba(31, 41, 55, 0.25);
+}
+
 .field-validation-error,
 .validation-summary-errors {
   display: block;
@@ -57,4 +155,19 @@ body {
 .btn,
 .custom-select {
   border-radius: 0.6rem;
+}
+
+.form-control:focus {
+  border-color: rgba(237, 28, 36, 0.4);
+}
+
+.input-validation-error,
+.form-control.is-invalid,
+.custom-select.is-invalid {
+  border-color: #dc3545 !important;
+  background-color: #fff5f5;
+}
+
+.field-validation-error {
+  color: #dc3545;
 }

@@ -10,38 +10,43 @@ public sealed class PartnerFormModel : IValidatableObject
     private static readonly Regex DigitsPattern = new(@"^\d+$", RegexOptions.Compiled);
     private static readonly Regex ExternalCodePattern = new(@"^[A-Za-z0-9]+$", RegexOptions.Compiled);
 
-    [Required]
+    [Required(ErrorMessage = "Ovo polje je obavezno.")]
     [StringLength(255, MinimumLength = 2)]
     public string FirstName { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Ovo polje je obavezno.")]
     [StringLength(255, MinimumLength = 2)]
     public string LastName { get; set; } = string.Empty;
 
     [StringLength(255)]
     public string? Address { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Ovo polje je obavezno.")]
     [StringLength(20, MinimumLength = 20)]
     public string PartnerNumber { get; set; } = string.Empty;
 
     [StringLength(11, MinimumLength = 11)]
     public string? CroatianPin { get; set; }
 
-    [Range(1, 2)]
-    public int PartnerTypeId { get; set; }
+    [Required(ErrorMessage = "Ovo polje je obavezno.")]
+    [Range(1, 2, ErrorMessage = "Ovo polje je obavezno.")]
+    public int? PartnerTypeId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Ovo polje je obavezno.")]
     [StringLength(255)]
     public string CreatedByUser { get; set; } = string.Empty;
 
+    public int? PartnerId { get; set; }
+
     public bool IsForeign { get; set; }
 
-    [Required]
+    public bool IsActive { get; set; } = true;
+
+    [Required(ErrorMessage = "Ovo polje je obavezno.")]
     [StringLength(20, MinimumLength = 10)]
     public string ExternalCode { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Ovo polje je obavezno.")]
     [StringLength(1, MinimumLength = 1)]
     public string Gender { get; set; } = string.Empty;
 

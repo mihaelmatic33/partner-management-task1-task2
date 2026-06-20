@@ -16,6 +16,59 @@
     <div class="alert alert-success" role="alert">@statusMessage</div>
 }
 
+<div class="card shadow-sm border-0 mb-4" id="partners-list-root" data-list-url="@Url.Action("List", "Partners")" data-highlight-id="@Model.HighlightPartnerId" data-policy-create-url="@Url.Action("Create", "Policies")" data-policy-edit-url-template="@Url.Action("Edit", "Policies", new { id = "__POLICY_ID__" })">
+    <div class="card-body">
+        <form id="partners-filter-form" class="mb-0" novalidate>
+            <div class="form-row align-items-end mb-2">
+                <div class="form-group col-lg-7 mb-2">
+                    <label for="partners-search" class="small font-weight-bold">Pretraga</label>
+                    <input type="text" class="form-control" id="partners-search" placeholder="Ime, partner number, PIN, iznos police" />
+                </div>
+                <div class="form-group col-lg-5 mb-2 text-lg-right">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="collapse" data-target="#advanced-filters" aria-expanded="false" aria-controls="advanced-filters">Filteri</button>
+                </div>
+            </div>
+
+            <div class="collapse" id="advanced-filters">
+                <div class="filter-panel rounded p-3 mb-2">
+                    <div class="form-row">
+                        <div class="form-group col-lg-4 mb-2">
+                    <label for="partners-name-filter" class="small font-weight-bold">Ime partnera</label>
+                    <input type="text" class="form-control" id="partners-name-filter" placeholder="npr. Marko Marić" />
+                </div>
+                <div class="form-group col-lg-2 mb-2">
+                    <label for="partners-pin-filter" class="small font-weight-bold">Croatian PIN</label>
+                    <input type="text" class="form-control" id="partners-pin-filter" maxlength="11" />
+                </div>
+                <div class="form-group col-lg-3 mb-2">
+                    <label for="partners-created-from" class="small font-weight-bold">Date created</label>
+                    <div class="d-flex align-items-center">
+                        <input type="date" class="form-control" id="partners-created-from" />
+                        <span class="mx-2 text-muted">-</span>
+                        <input type="date" class="form-control" id="partners-created-to" />
+                    </div>
+                </div>
+                </div>
+                    <div class="form-row align-items-end">
+                        <div class="form-group col-md-3 mb-2">
+                            <label for="partners-amount-min" class="small font-weight-bold">Iznos police od</label>
+                            <input type="number" class="form-control" id="partners-amount-min" step="0.01" min="0" />
+                        </div>
+                        <div class="form-group col-md-3 mb-2">
+                            <label for="partners-amount-max" class="small font-weight-bold">Iznos police do</label>
+                            <input type="number" class="form-control" id="partners-amount-max" step="0.01" min="0" />
+                        </div>
+                        <div class="form-group col-md-6 mb-2 text-md-right">
+                            <button type="submit" class="btn btn-primary">Primijeni filtere</button>
+                            <button type="button" class="btn btn-outline-secondary" id="partners-reset-filters">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -28,44 +81,24 @@
                         <th>PartnerType</th>
                         <th>CreatedAtUtc</th>
                         <th>IsForeign</th>
+                        <th>Aktivan</th>
                         <th>Gender</th>
                         <th>Police</th>
                         <th>Iznos polica</th>
                         <th class="text-right">Akcije</th>
                     </tr>
                 </thead>
-                <tbody>
-                @foreach (var partner in Model.Partners)
-                {
-                    var rowClass = partner.Id == Model.HighlightPartnerId ? "table-warning font-weight-bold highlighted-row" : string.Empty;
-                    <tr class="partner-row @rowClass"
-                        data-partner-id="@partner.Id"
-                        data-details-url="@Url.Action("Details", "Partners", new { id = partner.Id })">
-                        <td class="partner-full-name">@partner.FullName</td>
-                        <td>@partner.PartnerNumber</td>
-                        <td>@(string.IsNullOrWhiteSpace(partner.CroatianPin) ? "-" : partner.CroatianPin)</td>
-                        <td>@((PartnerType)partner.PartnerTypeId)</td>
-                        <td>@partner.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td>@(partner.IsForeign ? "Da" : "Ne")</td>
-                        <td>@partner.Gender</td>
-                        <td class="partner-policy-count">@partner.PolicyCount</td>
-                        <td class="partner-total-amount">@partner.TotalPolicyAmount.ToString("0.00") kn</td>
-                        <td class="text-right">
-                            <button type="button"
-                                    class="btn btn-outline-primary btn-sm open-policy-modal"
-                                    data-partner-id="@partner.Id"
-                                    data-partner-name="@partner.FullName">
-                                Unos police
-                            </button>
-                            <a class="btn btn-outline-secondary btn-sm" asp-controller="Policies" asp-action="Create" asp-route-partnerId="@partner.Id">Forma police</a>
-                        </td>
-                    </tr>
-                }
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
+        <div id="partners-loading" class="text-center text-muted py-3 d-none">Učitavanje partnera...</div>
+        <div id="partners-empty" class="text-center text-muted py-3 d-none">Nema rezultata za zadane filtere.</div>
+        <div id="partners-end" class="text-center text-muted py-3 d-none">Nema više partnera.</div>
+        <div id="partners-scroll-anchor" class="py-1"></div>
     </div>
 </div>
+
+<button type="button" class="floating-policy-cta d-none" id="floating-policy-cta">+ Dodaj policu</button>
 
 <div class="modal fade" id="partnerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="partnerDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
@@ -95,19 +128,22 @@
             <div class="modal-body">
                 <form id="policy-form" asp-controller="Policies" asp-action="Create" method="post">
                     @Html.AntiForgeryToken()
-                    <input asp-for="PolicyForm.PartnerId" type="hidden" id="policy-partner-id" />
+                    <input type="hidden" id="policy-id" name="PolicyId" />
+                    <input type="hidden" id="policy-partner-id" name="PartnerId" />
                     <div class="alert alert-danger d-none" id="policy-form-errors"></div>
                     <div class="form-group">
                         <label class="font-weight-bold">Partner</label>
                         <input type="text" class="form-control" id="policy-partner-name" readonly />
                     </div>
                     <div class="form-group">
-                        <label asp-for="PolicyForm.PolicyNumber">Broj police</label>
-                        <input asp-for="PolicyForm.PolicyNumber" class="form-control" id="policy-number" />
+                        <label for="policy-number">Broj police</label>
+                        <input type="text" class="form-control" id="policy-number" name="PolicyNumber" maxlength="15" />
+                        <span class="text-danger small d-block" id="policy-number-error"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="PolicyForm.PolicyAmount">Iznos police</label>
-                        <input asp-for="PolicyForm.PolicyAmount" class="form-control" id="policy-amount" step="0.01" min="0.01" />
+                        <label for="policy-amount">Iznos police</label>
+                        <input type="number" class="form-control" id="policy-amount" name="PolicyAmount" step="0.01" min="0.01" />
+                        <span class="text-danger small d-block" id="policy-amount-error"></span>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Spremi policu</button>
                 </form>

@@ -11,6 +11,7 @@ public sealed class PartnerDetails
     public DateTime CreatedAtUtc { get; init; }
     public string CreatedByUser { get; init; } = string.Empty;
     public bool IsForeign { get; init; }
+    public bool IsActive { get; init; }
     public string ExternalCode { get; init; } = string.Empty;
     public string Gender { get; init; } = string.Empty;
     public IReadOnlyList<PolicyListItem> Policies { get; set; } = [];

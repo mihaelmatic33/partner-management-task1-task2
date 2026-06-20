@@ -31,11 +31,11 @@ CREATE TABLE dbo.Partners
     CreatedAtUtc DATETIME2 NOT NULL CONSTRAINT DF_Partners_CreatedAtUtc DEFAULT SYSUTCDATETIME(),
     CreatedByUser NVARCHAR(255) NOT NULL,
     IsForeign BIT NOT NULL,
+    IsActive BIT NOT NULL CONSTRAINT DF_Partners_IsActive DEFAULT (1),
     ExternalCode NVARCHAR(20) NOT NULL,
     Gender CHAR(1) NOT NULL,
     CONSTRAINT UQ_Partners_PartnerNumber UNIQUE (PartnerNumber),
     CONSTRAINT UQ_Partners_ExternalCode UNIQUE (ExternalCode),
-    CONSTRAINT UQ_Partners_CroatianPIN UNIQUE (CroatianPIN),
     CONSTRAINT CK_Partners_PartnerTypeId CHECK (PartnerTypeId IN (1, 2)),
     CONSTRAINT CK_Partners_Gender CHECK (Gender IN ('M', 'F', 'N')),
     CONSTRAINT CK_Partners_PartnerNumberDigits CHECK (PartnerNumber NOT LIKE '%[^0-9]%'),
@@ -43,6 +43,11 @@ CREATE TABLE dbo.Partners
     CONSTRAINT CK_Partners_LastNameLength CHECK (LEN(LastName) BETWEEN 2 AND 255),
     CONSTRAINT CK_Partners_ExternalCodeLength CHECK (LEN(ExternalCode) BETWEEN 10 AND 20)
 );
+GO
+
+CREATE UNIQUE INDEX UX_Partners_CroatianPIN_NotNull
+ON dbo.Partners (CroatianPIN)
+WHERE CroatianPIN IS NOT NULL;
 GO
 
 CREATE TABLE dbo.InsurancePolicies
