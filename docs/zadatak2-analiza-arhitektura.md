@@ -155,3 +155,44 @@ function getAvailability(garageId):
 - Detaljan model ugovornih korisnika (flat fee, limit, SLA).
 - Pravila za buduce promocije i prioritet pravila.
 - Pravila fallbacka kada meteo servis nije dostupan.
+
+## 11. KPI za mjesečni izvjestaj
+
+| KPI | Opis | Formula (visoka razina) | Izvor podataka |
+| --- | --- | --- | --- |
+| Ukupni prihod | Prihod od svih naplata u mjesecu | SUM(Payment.Amount) | Payment |
+| Popunjenost garaže | Prosjecna zauzetost svih mjesta | occupiedMinutes / totalAvailableMinutes | VehicleSession, ParkingSpot |
+| Popunjenost po katu | Prosjecna zauzetost po katu | occupiedMinutesFloor / totalMinutesFloor | VehicleSession, ParkingSpot, Floor |
+| Isplativost kisne akcije | Ucinak akcije na prihod i popunjenost | (RevenueWithDiscount - BaselineEstimate) i DeltaUtilization | Payment, PricingRule, WeatherObservation |
+| Prosjecno trajanje parkiranja | Koliko dugo korisnici ostaju | AVG(ExitTimeUtc - EntryTimeUtc) | VehicleSession |
+| Udio ugovornih korisnika | Koliko prometa dolazi iz ugovora | contractSessions / totalSessions | VehicleSession, UserAccount, Contract |
+
+## 12. Scope i granice rjesenja
+
+### In scope
+- Evidencija ulaza/izlaza i trajanja parkiranja.
+- Naplata na naplatnim aparatima i kroz ugovorne modele.
+- Pravilo grace perioda od 10 minuta nakon placanja.
+- Izracun kisnog popusta za nenatkrivena mjesta.
+- Prikaz ukupnog broja slobodnih mjesta i slobodnih mjesta po katu.
+- Mjesecni reporti za poslovnu analizu rada garaže.
+
+### Out of scope (trenutna faza)
+- Placanje direktno na izlazu (izrijekom iskljuceno zahtjevom).
+- Napredna optimizacija cijena u stvarnom vremenu (izvan kisnog popusta).
+- Integracija s vanjskim BI platformama kao obavezni dio prve verzije.
+- Potpuna automatizacija svih vrsta promocija (osim postojece kisne akcije).
+
+## 13. Sljedivost zahtjeva
+
+| Zahtjev | Ključni proces | Komponenta |
+| --- | --- | --- |
+| Naplata prema vremenu zauzetosti | Obracun cijene i naplata | Pricing/Promotions Engine, Payment API |
+| Naplata na automatima i ugovorima | Placanje i settlement | Payment Service, Contract Service |
+| Broj slobodnih mjesta globalno | Availability izracun | Core Parking Domain, Cache |
+| Broj slobodnih mjesta po katu (pozeljno) | Availability po flooru | Core Parking Domain, Reporting |
+| Mjesecni uvid u poslovanje | Agregacija i reporti | Reporting Service, MonthlyReport |
+| Kisni popust 50% na nenatkrivena mjesta | Primjena promocijskog pravila | Pricing Engine, Weather Integration |
+| 10 minuta za izlaz nakon placanja | Validacija izlaza | Exit Control, Core Domain |
+| Nema placanja na izlazu | Blokada neplacenog izlaza | Exit Control, Payment Validation |
+| Osiguranje identiteta korisnika | Autentikacija/autorizacija | Identity/Auth Service, Audit Log |
